@@ -1,6 +1,6 @@
 import { useEffect, useReducer } from "react";
 import axios from "axios";
-import { actions } from "@storybook/addon-actions/dist/preview";
+
 import appReducer, {
   SET_DAY,
   SET_APPLICATION_DATA,
@@ -13,10 +13,11 @@ export default function useApplicationData() {
     days: [],
     appointments: {},
     interviewers: {}
-  })
+  });
 
-  const setDay = day => dispatch({ type: SET_DAY, day })
+  const setDay = day => dispatch({ type: SET_DAY, day });
 
+  // loading initial data from API
   useEffect(() => {
 
     const getDays = axios.get('/api/days');
@@ -28,8 +29,9 @@ export default function useApplicationData() {
         dispatch({ type: SET_APPLICATION_DATA , days: all[0].data, appointments: all[1].data, interviewers: all[2].data })
       })
       .catch(err => console.log(err))
-  }, [])
+  }, []);
 
+  // adding/editing an interview
   function bookInterview(id, interview) {
     const appointment = {
       ...state.appointments[id],
@@ -49,6 +51,7 @@ export default function useApplicationData() {
       .catch(err => {throw err})
   }
 
+  // cancel an interview
   function cancelInterview(id) {
     const appointment = {
       ...state.appointments[id],
@@ -68,5 +71,5 @@ export default function useApplicationData() {
       .catch(err => {throw err})
   }
   
-  return { state, setDay, bookInterview, cancelInterview }
+  return { state, setDay, bookInterview, cancelInterview };
 }

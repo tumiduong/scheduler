@@ -5,10 +5,12 @@ export const SET_INTERVIEW = "SET_INTERVIEW";
 export default function appReducer(state, action) {
   switch (action.type) {
     case SET_DAY:
-      return { ...state, day: action.day }
+      return { ...state, day: action.day };
     case SET_APPLICATION_DATA:
-      return { ...state, days: action.days, appointments: action.appointments, interviewers: action.interviewers  }
+      return { ...state, days: action.days, appointments: action.appointments, interviewers: action.interviewers };
     case SET_INTERVIEW:
+
+        // updating amount of spots available while setting interview
         const appointmentDay = (days, id) => {
           for (const day of days) {
             if (day.appointments.includes(id)) {
@@ -32,12 +34,12 @@ export default function appReducer(state, action) {
         const spotUpdate = {
           ...state.days[dayIndex],
           spots: spotCount(state.days[dayIndex])
-        }
+        };
         const dayUpdate = [
           ...state.days.slice(0, dayIndex), spotUpdate, ...state.days.slice(dayIndex + 1)
-        ]
+        ];
 
-      return { ...state, appointments: action.appointments, days: dayUpdate}
+      return { ...state, appointments: action.appointments, days: dayUpdate};
     default:
       throw new Error(
         `Tried to reduce with unsupported action type: ${action.type}`

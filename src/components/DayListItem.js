@@ -8,6 +8,7 @@ export default function DayListItem(props) {
     "day-list__item--full": props.spots === 0
   });
 
+  // reformatting the sentences for spots remaining
   function formatSpots(spots) {
     if (spots === 0) {
       return "no spots remaining";

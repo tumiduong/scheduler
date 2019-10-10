@@ -13,8 +13,9 @@ export default function Application(props) {
     cancelInterview
   } = useApplicationData();
 
+  // sorting interviewers and appointments of the day
   const appointments = getAppointmentsForDay(state, state.day);
-  const interviewers = getInterviewersForDay(state, state.day)
+  const interviewers = getInterviewersForDay(state, state.day);
   const apps = appointments.map(appointment => {
     const interview = getInterview(state, appointment.interview);
     return(
@@ -27,8 +28,8 @@ export default function Application(props) {
         bookInterview={bookInterview}
         cancelInterview={cancelInterview}
       />
-    )
-  })
+    );
+  });
 
   return (
     <main className="layout">
