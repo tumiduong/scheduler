@@ -1,42 +1,11 @@
 import { useEffect, useReducer } from "react";
 import axios from "axios";
-
-const SET_DAY = "SET_DAY";
-const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
-const SET_INTERVIEW = "SET_INTERVIEW";
-const SET_SPOTS = "SET_SPOTS";
-
-function appReducer(state, action) {
-  switch (action.type) {
-    case SET_DAY:
-      return { ...state, day: action.day }
-    case SET_APPLICATION_DATA:
-      return { ...state, days: action.days, appointments: action.appointments, interviewers: action.interviewers  }
-    case SET_INTERVIEW:
-      return { ...state, appointments: action.appointments }
-    case SET_SPOTS:
-      const spotDay = (days, id) => {
-        for (const day of days) {
-          if (day.appointments.includes(id)) {
-            return day;
-          }
-        }
-      }
-      const dayIndex = spotDay(state.days, action.id).id - 1;
-      const spotUpdate = {
-        ...state.days[dayIndex],
-        spots: state.days[dayIndex].spots + action.value
-      }
-      const dayUpdate = [
-        ...state.days.slice(0, dayIndex), spotUpdate, ...state.days.slice(dayIndex + 1)
-      ]
-      return { ...state, days: dayUpdate }
-    default:
-      throw new Error(
-        `Tried to reduce with unsupported action type: ${action.type}`
-      );
-  }
-}
+import { actions } from "@storybook/addon-actions/dist/preview";
+import appReducer, {
+  SET_DAY,
+  SET_APPLICATION_DATA,
+  SET_INTERVIEW
+} from "reducers/application";
 
 export default function useApplicationData() {
   const [state, dispatch] = useReducer(appReducer, {
@@ -75,10 +44,9 @@ export default function useApplicationData() {
     return axios
       .put(`/api/appointments/${id}`, {interview})
       .then(() => {
-        dispatch({ type: SET_INTERVIEW, appointments })
-        dispatch({ type: SET_SPOTS, id, value: -1 })
+        dispatch({ type: SET_INTERVIEW, appointments, id })
       })
-      .catch(err => console.log(err))
+      .catch(err => {throw err})
   }
 
   function cancelInterview(id) {
@@ -95,10 +63,9 @@ export default function useApplicationData() {
     return axios
       .delete(`/api/appointments/${id}`)
       .then(() => {
-        dispatch({ type: SET_INTERVIEW, appointments })
-        dispatch({ type: SET_SPOTS, id, value: 1 })
+        dispatch({ type: SET_INTERVIEW, appointments, id })
       })
-      .catch(err => console.log(err))
+      .catch(err => {throw err})
   }
   
   return { state, setDay, bookInterview, cancelInterview }

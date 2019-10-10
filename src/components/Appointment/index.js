@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import "components/Appointment/styles.scss";
 import Header from "components/Appointment/Header";
 import Show from "components/Appointment/Show";
@@ -34,7 +34,7 @@ export default function Appointment(props) {
 
     Promise.resolve(props.bookInterview(props.id, interview))
       .then(() => transition(SHOW))
-      .catch(error => transition(ERROR_SAVE, true))
+      .catch(err => transition(ERROR_SAVE, true))
   }
 
   function cancel() {
@@ -43,11 +43,11 @@ export default function Appointment(props) {
     
     Promise.resolve(props.cancelInterview(props.id))
       .then(() => transition(EMPTY))
-      .catch(error => transition(ERROR_DELETE, true))
+      .catch(err => transition(ERROR_DELETE, true))
   }
 
   return (
-    <Fragment>
+      <article className="appointment" data-testid="appointment">
       <Header time={props.time}/>
         {mode === EMPTY && (
         <Empty
@@ -64,8 +64,8 @@ export default function Appointment(props) {
        {mode === CREATE && (
          <Form
          interviewers={props.interviewers}
-         onCancel={() => back()}
-         onSave={(name, interviewer) => { save(name, interviewer) }}
+         onCancel={back}
+         onSave={save}
          />
        )}
        {mode === SAVING && (
@@ -76,8 +76,8 @@ export default function Appointment(props) {
        {mode === CONFIRM && (
          <Confirm
          message="Are you sure you would like to delete?"
-         onCancel={() => back()}
-         onConfirm={() => cancel()}
+         onCancel={back}
+         onConfirm={cancel}
          />
        )}
        {mode === DELETING && (
@@ -90,20 +90,22 @@ export default function Appointment(props) {
          name={props.interview.student}
          interviewers={props.interviewers}
          interviewer={props.interview.interviewer.id}
-         onCancel={() => back()}
-         onSave={(name, interviewer) => { save(name, interviewer) }}
+         onCancel={back}
+         onSave={save}
          />
        )}
        {mode === ERROR_SAVE && (
          <Error
          message="Could not save appointment."
+         onClose={back}
          />
        )}
        {mode === ERROR_DELETE && (
          <Error
          message="Could not delete appointment."
+         onClose={back}
          />
        )}
-    </Fragment>
+       </article>
   );
 }
