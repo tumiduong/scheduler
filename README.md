@@ -12,6 +12,10 @@ Install dependencies with `npm install`.
 npm start
 ```
 
+## Run with this API
+
+https://github.com/tumiduong/scheduler-api
+
 ## Booking an Appointment
 
 ### Navigate to the home page -
